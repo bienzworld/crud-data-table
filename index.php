@@ -5,7 +5,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>Inventory</title>
+	<title>Items</title>
 	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="datatable/dataTable.bootstrap.min.css">
 	<style>
@@ -23,7 +23,7 @@
 </head>
 <body>
 <div class="container">
-	<h1 class="page-header text-center">Inventory</h1>
+	<h1 class="page-header text-center">Item List</h1>
 	<div class="row">
 		<div class="col-sm-8 col-sm-offset-2">
 			<div class="row">
@@ -52,7 +52,8 @@
 			</div>
 			<div class="row">
 				<a href="#addnew" data-toggle="modal" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> New</a>
-				<a href="print_pdf.php" class="btn btn-success pull-right"><span class="glyphicon glyphicon-print"></span> PDF</a>
+				<a href="export_csv.php" class="btn btn-success pull-right"><span class="glyphicon glyphicon-print"></span> CSV</a>
+
 			</div>
 			<div class="height10">
 			</div>
@@ -71,8 +72,6 @@
 						<?php
 							include_once('connection.php');
 							$sql = "SELECT * FROM items";
-
-							//use for MySQLi-OOP
 							$query = $conn->query($sql);
 							while($row = $query->fetch_assoc()){
 								echo 
@@ -107,16 +106,42 @@
 <script>
 $(document).ready(function(){
 	//inialize datatable
-    $('#myTable').DataTable();
+	var dataTable = $('#myTable').DataTable();
 
     //hide alert
     $(document).on('click', '.close', function(){
     	$('.alert').hide();
     })
+	    // Export CSV button click event
+		$('#exportCsvBtn').on('click', function () {
+        // Get the current DataTable data
+        var currentData = dataTable.rows({ page: 'current' }).data().toArray();
+
+        // Create a CSV string from the current data
+        var csvContent = "Item Name,Own Price,Competitor Price 1,Competitor Price 2,Competitor Price 3,Competitor Price 4\n";
+        for (var i = 0; i < currentData.length; i++) {
+            csvContent += '"' + currentData[i][0] + '","' + currentData[i][1] + '","' + currentData[i][2] + '","' + currentData[i][3] + '","' + currentData[i][4] + '","' + currentData[i][5] + '"\n';
+        }
+
+        // Create a Blob containing the CSV data
+        var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+        // Create a download link for the CSV file
+		var currentDate = new Date();
+		var filename = 'items_' + currentDate.getFullYear() + '-' + ('0' + (currentDate.getMonth() + 1)).slice(-2) + '-' + ('0' + currentDate.getDate()).slice(-2) + '.csv';
+        var downloadLink = document.createElement("a");
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = filename;
+
+        // Trigger the download
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    });
 });
 </script>
 </body>
-<<style>
+<style>
 .PP{
 	text-align: center;
 }

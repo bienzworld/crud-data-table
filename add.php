@@ -9,20 +9,12 @@
 		$comp_price2 = $_POST['comp_price2'];
 		$comp_price3 = $_POST['comp_price3'];
 		$comp_price4 = $_POST['comp_price4'];
-		$sql = "INSERT INTO items (item_name, own_price, comp_price1, comp_price2, comp_price3, comp_price4) VALUES ('$item_name', '$own_price', '$comp_price1', '$comp_price2', '$comp_price3', '$comp_price4')";
+		$images = $_POST['images'];
+		$sql = "INSERT INTO items (item_name, own_price, comp_price1, comp_price2, comp_price3, comp_price4, images) VALUES ('$item_name', '$own_price', '$comp_price1', '$comp_price2', '$comp_price3', '$comp_price4', '$images')";
 
-		//use for MySQLi OOP
 		if($conn->query($sql)){
 			$_SESSION['success'] = 'Items added successfully';
 		}
-		///////////////
-
-		//use for MySQLi Procedural
-		// if(mysqli_query($conn, $sql)){
-		// 	$_SESSION['success'] = 'Member added successfully';
-		// }
-		//////////////
-		
 		else{
 			$_SESSION['error'] = 'Something went wrong while adding items';
 		}
