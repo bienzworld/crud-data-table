@@ -1,147 +1,66 @@
-<?php
-	session_start();
+<?php 
+   session_start();
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<meta charset="utf-8">
-	<title>Items</title>
-	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="datatable/dataTable.bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/style.css">
+    <title>Login</title>
 </head>
 <body>
-<div class="container">
-	<h1 class="page-header text-center">Item List</h1>
-	<div class="row">
-		<div class="col-sm-8 col-sm-offset-2">
-			<div class="row">
-			<?php
-				if(isset($_SESSION['error'])){
-					echo
-					"
-					<div class='alert alert-danger text-center'>
-						<button class='close'>&times;</button>
-						".$_SESSION['error']."
-					</div>
-					";
-					unset($_SESSION['error']);
-				}
-				if(isset($_SESSION['success'])){
-					echo
-					"
-					<div class='alert alert-success text-center'>
-						<button class='close'>&times;</button>
-						".$_SESSION['success']."
-					</div>
-					";
-					unset($_SESSION['success']);
-				}
-			?>
-			</div>
-			<div class="row">
-				<a href="#addnew" data-toggle="modal" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> New</a>
-				<button id="exportCsvBtn" class="btn btn-success pull-right"><span class="glyphicon glyphicon-print"></span> CSV</button>
+      <div class="container">
+        <div class="box form-box">
+            <?php 
+             
+              include_once("php/connection.php");
+              if(isset($_POST['submit'])){
+                $user_name = $_POST['user_name'];
+                $password = $_POST['password'];
 
-			</div>
-			<div class="height10">
-			</div>
-			<div class="row">
-				<table id="myTable" class="table table-bordered table-striped">
-					<thead>
-						<th>Item Name</th>
-						<th>Own Price</th>
-						<th>Competitor Price 1</th>
-						<th>Competitor Price 2</th>
-						<th>Competitor Price 3</th>
-						<th>Competitor Price 4</th>
-						<th>Action</th>
-					</thead>
-					<tbody>
-						<?php
-							include_once('connection.php');
-							$sql = "SELECT * FROM items";
-							$query = $conn->query($sql);
-							while($row = $query->fetch_assoc()){
-								$itemImage = $row['images'];
-								echo 
-								"<tr class='table-format'>
-									<td><button class='btn btn-success btn-sm view-image-button' data-image='$itemImage'>View Image</button>
-									$row[item_name]</td>
-									<td>"."₱".number_format($row['own_price'], 2)."</td>
-									<td>"."₱".number_format($row['comp_price1'], 2)."</td>
-									<td>"."₱".number_format($row['comp_price2'], 2)."</td>
-									<td>"."₱".number_format($row['comp_price3'], 2)."</td>
-									<td>"."₱".number_format($row['comp_price4'], 2)."</td>
-									<td>
-										<a href='#edit_".$row['item_id']."' class='btn btn-success btn-sm' data-toggle='modal'><span class='glyphicon glyphicon-edit'></span> Edit</a>
-										<a href='#delete_".$row['item_id']."' class='btn btn-danger btn-sm' data-toggle='modal'><span class='glyphicon glyphicon-trash'></span> Delete</a>
-									</td>
-								</tr>";
-								include('edit_delete_modal.php');
-							}
-						?>
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</div>
-</div>
-<?php include('add_modal.php') ?>
-<script src="jquery/jquery.min.js"></script>
-<script src="bootstrap/js/bootstrap.min.js"></script>
-<script src="datatable/jquery.dataTables.min.js"></script>
-<script src="datatable/dataTable.bootstrap.min.js"></script>
-<!-- generate datatable on our table -->
-<script>
-$(document).ready(function(){
-	//inialize datatable
-	var dataTable = $('#myTable').DataTable();
+                $sql = "SELECT * FROM users WHERE user_name='$user_name' AND password='$password'";
+                $result = $conn->query($sql);
+                if ($result->num_rows == 1) {
+                    $row = $result->fetch_assoc();
+                    if(is_array($row) && !empty($row)){
+                        $_SESSION['user_name'] = $row['user_name'];
+                        $_SESSION['password'] = $row['password'];
+                        $_SESSION['user_type'] = $row['user_type'];
+                        $_SESSION['user_id'] = $row['user_id'];
+                    } else {
+                        echo "<div class='message'>
+                        <p>Wrong Username or Password</p>
+                         </div> <br>";
+                        echo "<a href='index.php'><button class='btn'>Go Back</button>";
+                    }
+                }
+                if (isset($_SESSION['user_name']) && $_SESSION['user_type']  == 1) {
+                    header("Location: admin_view.php");
+                }                
+              }else{
+            
+            ?>
+            <header>Login</header>
+            <form action="" method="post">
+                <div class="field input">
+                    <label for="user_name">Username</label>
+                    <input type="text" name="user_name" id="user_name" autocomplete="off" required>
+                </div>
 
-    //hide alert
-    $(document).on('click', '.close', function(){
-    	$('.alert').hide();
-    })
-	$('#exportCsvBtn').on('click', function () {
-    var currentData = dataTable.rows({ page: 'current' }).data().toArray();
-    var csvContent = "Item Name,Own Price,Competitor Price 1,Competitor Price 2,Competitor Price 3,Competitor Price 4\n";
+                <div class="field input">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" autocomplete="off" required>
+                </div>
 
-    for (var i = 0; i < currentData.length; i++) {
-        // Replace HTML tags with an empty string to remove them from the data
-        var rowData = currentData[i].map(function (cellData) {
-            return cellData.replace(/<[^>]*>/g, '').trim(); // This regex removes HTML tags
-        });
-
-        csvContent += '"' + rowData[0] + '","' + rowData[1] + '","' + rowData[2] + '","' + rowData[3] + '","' + rowData[4] + '","' + rowData[5] + '"\n';
-    }
-
-    // Rest of the code for creating and downloading the CSV remains the same
-    var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    var currentDate = new Date();
-    var filename = 'items_' + currentDate.getFullYear() + '-' + ('0' + (currentDate.getMonth() + 1)).slice(-2) + '-' + ('0' + currentDate.getDate()).slice(-2) + '.csv';
-    var downloadLink = document.createElement("a");
-    downloadLink.href = URL.createObjectURL(blob);
-    downloadLink.download = filename;
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-	});
-
-});
-</script>
-<script>
-	$(document).ready(function() {
-    // Define a click event handler for the buttons with the class view-image-button
-    	$(".view-image-button").click(function() {
-   	     var imageUrl = $(this).data('image'); // Get the image URL from the data attribute
-  	      window.open(imageUrl, '_blank');
- 	   });
-	});
-</script>
+                <div class="field">
+                    
+                    <input type="submit" class="btn" name="submit" value="Login" required>
+                </div>
+            </form>
+        </div>
+        <?php } ?>
+      </div>
 </body>
-<style>
-.PP{
-	text-align: center;
-}
-</style>
 </html>
