@@ -11,11 +11,13 @@ if(isset($_POST['add'])){
     $comp_price4 = $_POST['comp_price4'];
 
     // Handle image upload
-    $targetDirectory = "uploads/"; // Specify the folder where you want to save the images
+    $targetDirectory = "uploads/"; 
 	if (!file_exists($targetDirectory)) {
 		mkdir($targetDirectory, 0777, true);
 	}
-    $targetFile = $targetDirectory . basename($_FILES['images']['name']);
+    $dateFormat = "YmdHis"; 
+    $currentDate = date($dateFormat);
+    $targetFile = $targetDirectory . $currentDate . "_" . basename($_FILES['images']['name']);
     
     // Check if the file is an actual image
     $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));

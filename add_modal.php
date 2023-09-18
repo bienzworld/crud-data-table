@@ -22,7 +22,7 @@
                         <label class="control-label modal-label">Own Price:</label>
                     </div>
                     <div class="col-sm-10">
-                        <input type="number" class="form-control" name="own_price" placeholder="Own Price" required>
+                        <input type="number" class="form-control" name="own_price" placeholder="Own Price" step="0.01" required>
                     </div>
                 </div>
                 <div class="row form-group">
@@ -30,7 +30,7 @@
                         <label class="control-label modal-label">Competitor Price 1:</label>
                     </div>
                     <div class="col-sm-10">
-                        <input type="number" class="form-control" name="comp_price1" placeholder="Competitor Price" required>
+                        <input type="number" class="form-control" name="comp_price1" placeholder="Competitor Price" step="0.01" required>
                     </div>
                 </div>
                 <div class="row form-group">
@@ -38,7 +38,7 @@
                         <label class="control-label modal-label">Competitor Price 2:</label>
                     </div>
                     <div class="col-sm-10">
-                        <input type="number" class="form-control" name="comp_price2" placeholder="Competitor Price" required>
+                        <input type="number" class="form-control" name="comp_price2" placeholder="Competitor Price" step="0.01" required>
                     </div>
                 </div>
                 <div class="row form-group">
@@ -46,7 +46,7 @@
                         <label class="control-label modal-label">Competitor Price 3:</label>
                     </div>
                     <div class="col-sm-10">
-                        <input type="number" class="form-control" name="comp_price3" placeholder="Competitor Price" required>
+                        <input type="number" class="form-control" name="comp_price3" placeholder="Competitor Price" step="0.01" required>
                     </div>
                 </div>
                 <div class="row form-group">
@@ -54,7 +54,7 @@
                         <label class="control-label modal-label">Competitor Price 4:</label>
                     </div>
                     <div class="col-sm-10">
-                        <input type="number" class="form-control" name="comp_price4" placeholder="Competitor Price" required>
+                        <input type="number" class="form-control" name="comp_price4" placeholder="Competitor Price" step="0.01" required>
                     </div>
                 </div>
                 <div class="row form-group">

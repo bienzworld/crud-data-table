@@ -8,7 +8,7 @@
             </div>
             <div class="modal-body">
 			<div class="container-fluid">
-			<form method="POST" action="edit.php">
+			<form method="POST" action="edit.php" enctype="multipart/form-data">
 				<input type="hidden" class="form-control" name="item_id" value="<?php echo $row['item_id']; ?>">
 				<div class="row form-group">
 					<div class="col-sm-2">
@@ -58,6 +58,25 @@
 						<input type="text" class="form-control" name="comp_price4" value="<?php echo $row['comp_price4']; ?>">
 					</div>
 				</div>
+				<!--upload image-->
+				<div class="row form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label modal-label">Image:</label>
+                    </div>
+                    <div class="col-sm-10">
+                        <!-- Give your file input an id -->
+                        <input type="file" class="form-control custom-file-input" name="images" id="images">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label modal-label">Uploaded Image:</label>
+                    </div>
+                    <div class="col-sm-10">
+                        <!-- Add the ID to the img tag to display the uploaded image -->
+                        <img src="<?php echo $row['images']; ?>" id="uploadedImage" alt="" style="max-width: 50%; max-height: 100px;">
+                    </div>
+                </div>
             </div> 
 			</div>
             <div class="modal-footer">

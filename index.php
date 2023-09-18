@@ -8,18 +8,7 @@
 	<title>Items</title>
 	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="datatable/dataTable.bootstrap.min.css">
-	<style>
-		.height10{
-			height:10px;
-		}
-		.mtop10{
-			margin-top:10px;
-		}
-		.modal-label{
-			position:relative;
-			top:7px
-		}
-	</style>
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 <div class="container">
@@ -52,7 +41,7 @@
 			</div>
 			<div class="row">
 				<a href="#addnew" data-toggle="modal" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> New</a>
-				<a href="export_csv.php" class="btn btn-success pull-right"><span class="glyphicon glyphicon-print"></span> CSV</a>
+				<button id="exportCsvBtn" class="btn btn-success pull-right"><span class="glyphicon glyphicon-print"></span> CSV</button>
 
 			</div>
 			<div class="height10">
@@ -74,9 +63,11 @@
 							$sql = "SELECT * FROM items";
 							$query = $conn->query($sql);
 							while($row = $query->fetch_assoc()){
+								$itemImage = $row['images'];
 								echo 
-								"<tr>
-									<td>".$row['item_name']."</td>
+								"<tr class='table-format'>
+									<td><button class='btn btn-success btn-sm view-image-button' data-image='$itemImage'>View Image</button>
+									$row[item_name]</td>
 									<td>"."₱".number_format($row['own_price'], 2)."</td>
 									<td>"."₱".number_format($row['comp_price1'], 2)."</td>
 									<td>"."₱".number_format($row['comp_price2'], 2)."</td>
@@ -97,7 +88,6 @@
 	</div>
 </div>
 <?php include('add_modal.php') ?>
-
 <script src="jquery/jquery.min.js"></script>
 <script src="bootstrap/js/bootstrap.min.js"></script>
 <script src="datatable/jquery.dataTables.min.js"></script>
@@ -112,33 +102,41 @@ $(document).ready(function(){
     $(document).on('click', '.close', function(){
     	$('.alert').hide();
     })
-	    // Export CSV button click event
-		$('#exportCsvBtn').on('click', function () {
-        // Get the current DataTable data
-        var currentData = dataTable.rows({ page: 'current' }).data().toArray();
+	$('#exportCsvBtn').on('click', function () {
+    var currentData = dataTable.rows({ page: 'current' }).data().toArray();
+    var csvContent = "Item Name,Own Price,Competitor Price 1,Competitor Price 2,Competitor Price 3,Competitor Price 4\n";
 
-        // Create a CSV string from the current data
-        var csvContent = "Item Name,Own Price,Competitor Price 1,Competitor Price 2,Competitor Price 3,Competitor Price 4\n";
-        for (var i = 0; i < currentData.length; i++) {
-            csvContent += '"' + currentData[i][0] + '","' + currentData[i][1] + '","' + currentData[i][2] + '","' + currentData[i][3] + '","' + currentData[i][4] + '","' + currentData[i][5] + '"\n';
-        }
+    for (var i = 0; i < currentData.length; i++) {
+        // Replace HTML tags with an empty string to remove them from the data
+        var rowData = currentData[i].map(function (cellData) {
+            return cellData.replace(/<[^>]*>/g, '').trim(); // This regex removes HTML tags
+        });
 
-        // Create a Blob containing the CSV data
-        var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        csvContent += '"' + rowData[0] + '","' + rowData[1] + '","' + rowData[2] + '","' + rowData[3] + '","' + rowData[4] + '","' + rowData[5] + '"\n';
+    }
 
-        // Create a download link for the CSV file
-		var currentDate = new Date();
-		var filename = 'items_' + currentDate.getFullYear() + '-' + ('0' + (currentDate.getMonth() + 1)).slice(-2) + '-' + ('0' + currentDate.getDate()).slice(-2) + '.csv';
-        var downloadLink = document.createElement("a");
-        downloadLink.href = URL.createObjectURL(blob);
-        downloadLink.download = filename;
+    // Rest of the code for creating and downloading the CSV remains the same
+    var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    var currentDate = new Date();
+    var filename = 'items_' + currentDate.getFullYear() + '-' + ('0' + (currentDate.getMonth() + 1)).slice(-2) + '-' + ('0' + currentDate.getDate()).slice(-2) + '.csv';
+    var downloadLink = document.createElement("a");
+    downloadLink.href = URL.createObjectURL(blob);
+    downloadLink.download = filename;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+	});
 
-        // Trigger the download
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-    });
 });
+</script>
+<script>
+	$(document).ready(function() {
+    // Define a click event handler for the buttons with the class view-image-button
+    	$(".view-image-button").click(function() {
+   	     var imageUrl = $(this).data('image'); // Get the image URL from the data attribute
+  	      window.open(imageUrl, '_blank');
+ 	   });
+	});
 </script>
 </body>
 <style>

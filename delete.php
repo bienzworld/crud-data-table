@@ -1,29 +1,37 @@
 <?php
-	session_start();
-	include_once('connection.php');
+session_start();
+include_once('connection.php');
 
-	if(isset($_GET['item_id'])){
-		$sql = "DELETE FROM items WHERE item_id = '".$_GET['item_id']."'";
+if(isset($_GET['item_id'])){
+    // Fetch the filename of the image associated with the item
+    $sql = "SELECT images FROM items WHERE item_id = '".$_GET['item_id']."'";
+    $result = $conn->query($sql);
 
-		//use for MySQLi OOP
-		if($conn->query($sql)){
-			$_SESSION['success'] = 'Item deleted successfully';
-		}
-		////////////////
+    if ($result->num_rows == 1) {
+        $row = $result->fetch_assoc();
+        $images = $row['images'];
 
-		//use for MySQLi Procedural
-		// if(mysqli_query($conn, $sql)){
-		// 	$_SESSION['success'] = 'Member deleted successfully';
-		// }
-		/////////////////
-		
-		else{
-			$_SESSION['error'] = 'Something went wrong in deleting item';
-		}
-	}
-	else{
-		$_SESSION['error'] = 'Select item to delete first';
-	}
+        // Delete the record from the database
+        $deleteSQL = "DELETE FROM items WHERE item_id = '".$_GET['item_id']."'";
+        if($conn->query($deleteSQL)){
+            // Delete the image file from the uploads folder
+            $imagePath = $images;
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
 
-	header('location: index.php');
+            $_SESSION['success'] = 'Item deleted successfully';
+        }
+        else{
+            $_SESSION['error'] = 'Something went wrong in deleting item';
+        }
+    } else {
+        $_SESSION['error'] = 'Item not found';
+    }
+}
+else{
+    $_SESSION['error'] = 'Select item to delete first';
+}
+
+header('location: index.php');
 ?>
