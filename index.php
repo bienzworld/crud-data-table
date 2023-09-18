@@ -35,9 +35,16 @@
                          </div> <br>";
                         echo "<a href='index.php'><button class='btn'>Go Back</button>";
                     }
+                } else {
+                    echo "<div class='message'>
+                    <p>Wrong Username or Password</p>
+                     </div> <br>";
+                    echo "<a href='index.php'><button class='btn'>Go Back</button>";
                 }
                 if (isset($_SESSION['user_name']) && $_SESSION['user_type']  == 1) {
                     header("Location: admin_view.php");
+                } else {
+                    header("Location: user_view.php");
                 }                
               }else{
             

@@ -61,7 +61,6 @@
 			?>
 			</div>
 			<div class="row">
-				<a href="#addnew" data-toggle="modal" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> New</a>
 				<button id="exportCsvBtn" class="btn btn-success pull-right"><span class="glyphicon glyphicon-print"></span> CSV</button>
 
 			</div>
@@ -76,7 +75,6 @@
 						<th>Competitor Price 2</th>
 						<th>Competitor Price 3</th>
 						<th>Competitor Price 4</th>
-						<th>Action</th>
 					</thead>
 					<tbody>
 						<?php
@@ -87,23 +85,18 @@
 								$itemImage = $row['images'];
 								echo 
 								"<tr class='table-format'>
-								<div class='text-center'>
-								<td><button class='btn btn-primary view-image-button' data-image='$itemImage'>View Image</button>
-								</div>
-								<div class='text-center'>
-								$row[item_name]</td>
-								</div>
-								<td style='vertical-align: middle'>"."₱".number_format($row['own_price'], 2)."</td>
-								<td style='vertical-align: middle'>"."₱".number_format($row['comp_price1'], 2)."</td>
-								<td style='vertical-align: middle'>"."₱".number_format($row['comp_price2'], 2)."</td>
-								<td style='vertical-align: middle'>"."₱".number_format($row['comp_price3'], 2)."</td>
-								<td style='vertical-align: middle'>"."₱".number_format($row['comp_price4'], 2)."</td>
-									<td>
-										<a href='#edit_".$row['item_id']."' class='btn btn-success btn-sm' data-toggle='modal'><span class='glyphicon glyphicon-edit'></span> Edit</a>
-										<a href='#delete_".$row['item_id']."' class='btn btn-danger btn-sm' data-toggle='modal'><span class='glyphicon glyphicon-trash'></span> Delete</a>
-									</td>
+                                    <div class='text-center'>
+									<td><button class='btn btn-primary view-image-button' data-image='$itemImage'>View Image</button>
+                                    </div>
+                                    <div class='text-center'>
+									$row[item_name]</td>
+                                    </div>
+									<td style='vertical-align: middle'>"."₱".number_format($row['own_price'], 2)."</td>
+									<td style='vertical-align: middle'>"."₱".number_format($row['comp_price1'], 2)."</td>
+									<td style='vertical-align: middle'>"."₱".number_format($row['comp_price2'], 2)."</td>
+									<td style='vertical-align: middle'>"."₱".number_format($row['comp_price3'], 2)."</td>
+									<td style='vertical-align: middle'>"."₱".number_format($row['comp_price4'], 2)."</td>
 								</tr>";
-								include('edit_delete_modal.php');
 							}
 						?>
 					</tbody>
@@ -134,7 +127,7 @@ $(document).ready(function(){
     for (var i = 0; i < currentData.length; i++) {
         // Replace HTML tags with an empty string to remove them from the data
         var rowData = currentData[i].map(function (cellData) {
-			var cellWithoutViewImage = cellData.replace(/<[^>]*>/g, '').trim();
+            var cellWithoutViewImage = cellData.replace(/<[^>]*>/g, '').trim();
             return cellWithoutViewImage.replace(/View Image/g, '').trim();
         });
 
