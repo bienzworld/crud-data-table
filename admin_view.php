@@ -34,6 +34,7 @@
 <div class="container">
 	<a href="php/logout.php"> <button class="btn btn-danger btn-sm pull-right">Log Out</button> </a>
 	<h1 class="page-header text-center">Item List</h1>
+	<h2 class="page-header text-center">Admin</h2>
 	<div class="row">
 		<div class="col-sm-8 col-sm-offset-2">
 			<div class="row">

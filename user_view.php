@@ -34,6 +34,7 @@
 <div class="container">
 	<a href="php/logout.php"> <button class="btn btn-danger btn-sm pull-right">Log Out</button> </a>
 	<h1 class="page-header text-center">Item List</h1>
+	<h2 class="page-header text-center">View Only</h2>
 	<div class="row">
 		<div class="col-sm-8 col-sm-offset-2">
 			<div class="row">
@@ -115,6 +116,22 @@
 $(document).ready(function(){
 	//inialize datatable
 	var dataTable = $('#myTable').DataTable();
+
+	// Hide all rows initially
+	dataTable.rows().nodes().to$().hide();
+
+	// Define a custom function to show/hide rows based on search input
+	function filterTable(searchValue) {
+		dataTable.search(searchValue).draw();
+		dataTable.rows().nodes().to$().show();
+		dataTable.rows({ search: 'removed' }).nodes().to$().hide();
+	}
+
+	// Listen to the search input event and call the custom function
+	$('#myTable_filter input').on('keyup', function () {
+		var searchValue = this.value;
+		filterTable(searchValue);
+	});
 
     //hide alert
     $(document).on('click', '.close', function(){

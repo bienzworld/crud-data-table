@@ -63,7 +63,7 @@
                     </div>
                     <div class="col-sm-10">
                         <!-- Give your file input an id -->
-                        <input type="file" class="form-control custom-file-input" name="images" id="images" required>
+                        <input type="file" class="form-control custom-file-input" name="images" id="images">
                     </div>
                 </div>
                 <div class="row form-group">

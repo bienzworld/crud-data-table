@@ -63,7 +63,8 @@ if (isset($_POST['edit'])) {
             comp_price1 = '$comp_price1', 
             comp_price2 = '$comp_price2',
             comp_price3 = '$comp_price3',
-            comp_price4 = '$comp_price4' $imageUpdate
+            comp_price4 = '$comp_price4' $imageUpdate,
+            date_update = CURENT_TIMESTAMP()
             WHERE item_id = '$item_id'";
 
     if ($conn->query($sql)) {
